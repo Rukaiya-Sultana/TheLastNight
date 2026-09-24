@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TheLastNight" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option extended_obj_names="1" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/TheLastNight" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/TheLastNight" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-DFREEGLUT_STATIC" />
+			<!-- Build FreeGLUT from the vendored 3.6.0 source with the same
+			     compiler architecture as the game.  The former prebuilt .a was
+			     32-bit while modern Code::Blocks MinGW is normally 64-bit. -->
+			<Add option="-DFREEGLUT_BUILDING_LIB" />
+			<!-- Keep the WinXP API level and FreeGLUT's XParseGeometry shim. -->
+			<Add option="-D_WIN32_WINNT=0x0501" />
+			<Add option="-DNEED_XPARSEGEOMETRY_IMPL" />
+			<!-- This game does not use a 3Dconnexion Spaceball. The Windows
+			     no-device stubs are built; the optional raw-input backend is not. -->
+			<Add option="-DFREEGLUT_DISABLE_SPACEBALL" />
+			<Add directory="vendor/freeglut/include" />
+			<Add directory="vendor/freeglut-3.6.0/include" />
+			<Add directory="vendor/freeglut-3.6.0/src" />
+		</Compiler>
+		<Linker>
+			<Add library="opengl32" />
+			<Add library="glu32" />
+			<Add library="gdi32" />
+			<Add library="winmm" />
+			<Add library="user32" />
+			<Add library="kernel32" />
+		</Linker>
+		<Unit filename="Basement.cpp" />
+		<Unit filename="Basement.h" />
+		<Unit filename="Camera.cpp" />
+		<Unit filename="Camera.h" />
+		<Unit filename="Collision.cpp" />
+		<Unit filename="Collision.h" />
+		<Unit filename="Garden.cpp" />
+		<Unit filename="Garden.h" />
+		<Unit filename="Game.cpp" />
+		<Unit filename="Game.h" />
+		<Unit filename="SecretRoom.cpp" />
+		<Unit filename="SecretRoom.h" />
+		<Unit filename="Study.cpp" />
+		<Unit filename="Study.h" />
+		<Unit filename="GrandHall.cpp" />
+		<Unit filename="GrandHall.h" />
+		<Unit filename="Interaction.cpp" />
+		<Unit filename="Interaction.h" />
+		<Unit filename="Lighting.cpp" />
+		<Unit filename="Lighting.h" />
+		<Unit filename="Library.cpp" />
+		<Unit filename="Library.h" />
+		<Unit filename="Lobby.cpp" />
+		<Unit filename="Lobby.h" />
+		<Unit filename="Objects.cpp" />
+		<Unit filename="Objects.h" />
+		<Unit filename="Objective.cpp" />
+		<Unit filename="Objective.h" />
+		<Unit filename="Progress.cpp" />
+		<Unit filename="Progress.h" />
+		<Unit filename="Puzzle.cpp" />
+		<Unit filename="Puzzle.h" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.h" />
+		<Unit filename="Texture.cpp" />
+		<Unit filename="Texture.h" />
+		<Unit filename="UI.cpp" />
+		<Unit filename="UI.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="Weather.cpp" />
+		<Unit filename="Weather.h" />
+		<!-- FreeGLUT 3.6.0, compiled as part of this project. -->
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_callbacks.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_cursor.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_display.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_ext.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_font.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_font_data.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_gamemode.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_geometry.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_gl2.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_init.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_input_devices.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_joystick.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_main.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_menu.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_misc.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_overlay.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_spaceball.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_state.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_stroke_mono_roman.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_stroke_roman.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_structure.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_teapot.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_videoresize.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/fg_window.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/util/xparsegeometry_repl.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_cmap_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_cursor_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_display_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_ext_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_gamemode_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_init_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_input_devices_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_joystick_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_main_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_menu_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_state_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_structure_mswin.c" />
+		<Unit filename="vendor/freeglut-3.6.0/src/mswin/fg_window_mswin.c" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

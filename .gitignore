@@ -1,0 +1,22 @@
+# Code::Blocks generated build files
+obj/
+bin/
+
+# Compiled files
+*.o
+*.exe
+
+# Code::Blocks user-specific files
+*.depend
+*.layout
+
+# Logs / temporary files
+*.log
+*.tmp
+
+# Downloaded archive
+freeglut-3.6.0.zip
+
+# Python cache
+__pycache__/
+*.pyc
