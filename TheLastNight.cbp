@@ -57,6 +57,8 @@
 		</Linker>
 		<Unit filename="Basement.cpp" />
 		<Unit filename="Basement.h" />
+		<Unit filename="Audio.cpp" />
+		<Unit filename="Audio.h" />
 		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
 		<Unit filename="Collision.cpp" />

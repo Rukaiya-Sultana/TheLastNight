@@ -484,6 +484,7 @@ namespace SecretRoom
     // ---- door --------------------------------------------------------
     void SetDoorOpen(bool open) { g_doorOpening = open; }
     bool IsDoorOpen()           { return g_doorAngle > 95.0f; }
+    bool IsDoorOpening()        { return g_doorOpening; }
 
     void UpdateDoor(float dt)
     {

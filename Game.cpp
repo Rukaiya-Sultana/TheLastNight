@@ -23,6 +23,7 @@
 #include "Weather.h"
 #include "Interaction.h"
 #include "Objective.h"
+#include "Audio.h"
 #include <GL/freeglut.h>
 #include <cmath>
 #include <cstdio>
@@ -63,6 +64,10 @@ namespace
     int g_devTurn     = -1;             // --turn NNN: preset front-dial state (dev)
     int g_devMsg      = 0;              // --msg N: show test message N on boot (dev)
     bool g_devPuzzle  = false;          // --puzzle: open the safe keypad on boot (dev)
+
+    const char *MUSIC_LOOP = "assets/audio/music/mystery_loop.wav";
+    const char *DOOR_OPEN = "assets/audio/sfx/door_wood_open.wav";
+    const char *DOOR_CLOSE = "assets/audio/sfx/door_wood_close.wav";
 
     // ---- dev helper: dump the current frame to shot.bmp (F4) ----------
     void DumpScreenshot()
@@ -161,6 +166,8 @@ namespace
 {
     void Update(float dt)
     {
+        Audio::Update();
+
         // ---- non-playing modes: the world still animates (doors finish
         // their swings, rain falls); only gameplay input is gated.
         if (UI::GetMode() == MODE_ENDING)
@@ -180,6 +187,10 @@ namespace
         g_player.update(dt);
         g_player.updateCamera(g_camera);
         Puzzle::Update(dt);
+        // The safe begins its visual swing on the next render after this
+        // one-shot is raised; play once for that real state transition.
+        if (Puzzle::ConsumeJustOpened())
+            Audio::PlayEffect(DOOR_OPEN);
         Objective::Update(dt, g_player.x(), g_player.y(), g_player.z(), g_player.yaw());
         UI::Update(dt);
         // The brass key is a world interaction as well as a rendered prop.
@@ -889,6 +900,7 @@ namespace
                     Progress::Set(Progress::SECRETDOOR_OPEN, true);
                     Basement::SetSecretDoorOpen(true);
                     SecretRoom::SetDoorOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     Interaction::SetEnabled(Interaction::ID_SECRETDOOR, false);
                     Interaction::SetEnabled(Interaction::ID_SRDOOR, true);
                 }
@@ -907,7 +919,16 @@ namespace
                 // Keep the room-side control available in both states. If
                 // the player closes the door after entering, they must still
                 // be able to reopen it and return through the passage.
-                SecretRoom::SetDoorOpen(!SecretRoom::IsDoorOpen());
+                if (SecretRoom::IsDoorOpen())
+                {
+                    SecretRoom::SetDoorOpen(false);
+                    Audio::PlayEffect(DOOR_CLOSE);
+                }
+                else if (!SecretRoom::IsDoorOpening())
+                {
+                    SecretRoom::SetDoorOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
+                }
                 break;
             case Interaction::ID_BLUEPRINT:
                 UI::SetMessage("THE MANSION BLUEPRINT",
@@ -1021,6 +1042,7 @@ namespace
                     Interaction::SetEnabled(Interaction::ID_BRASSKEY, false);
                     Progress::Set(Progress::STUDY_UNLOCKED, true);
                     Library::SetStudyDoorOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     Interaction::SetEnabled(Interaction::ID_STUDYDOOR, false);
                     Interaction::SetEnabled(Interaction::ID_STUDYCLOSE, true);
                     UI::SetMessage("OLD BRASS KEY",
@@ -1040,6 +1062,7 @@ namespace
                 {
                     Progress::Set(Progress::STUDY_UNLOCKED, true);
                     Library::SetStudyDoorOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     Interaction::SetEnabled(Interaction::ID_STUDYDOOR, false);
                     Interaction::SetEnabled(Interaction::ID_STUDYCLOSE, true);
                     UI::SetMessage("THE STUDY DOOR",
@@ -1055,6 +1078,7 @@ namespace
                 break;
             case Interaction::ID_STUDYCLOSE:
                 Library::SetStudyDoorOpen(false);
+                Audio::PlayEffect(DOOR_CLOSE);
                 Interaction::SetEnabled(Interaction::ID_STUDYDOOR, true);
                 Interaction::SetEnabled(Interaction::ID_STUDYCLOSE, false);
                 break;
@@ -1091,6 +1115,7 @@ namespace
                 else if (Progress::Get(Progress::HAS_MANSION_KEY))
                 {
                     Progress::Set(Progress::MAP_CLOSET_OPEN, true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     UI::SetMessage("THE MAP CLOSET",
                         "The mansion key turns. The closet opens on rolled\n"
                         "maps and brass fittings.");
@@ -1107,11 +1132,13 @@ namespace
                 GrandHall::SetWestDoorOpen(true);
                 Interaction::SetEnabled(Interaction::ID_HALLDOOR, false);
                 Interaction::SetEnabled(Interaction::ID_CLOSEDOOR, true);
+                Audio::PlayEffect(DOOR_OPEN);
                 break;
             case Interaction::ID_CLOSEDOOR:
                 GrandHall::SetWestDoorOpen(false);
                 Interaction::SetEnabled(Interaction::ID_HALLDOOR, true);
                 Interaction::SetEnabled(Interaction::ID_CLOSEDOOR, false);
+                Audio::PlayEffect(DOOR_CLOSE);
                 break;
 
             // ---------------- Phase 7: garden actions ----------------
@@ -1124,6 +1151,7 @@ namespace
                     const bool wasOpen = Progress::Get(Progress::GARDEN_DOOR_OPEN);
                     Progress::Set(Progress::GARDEN_DOOR_OPEN, true);
                     Lobby::SetGardenDoorOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     Interaction::SetEnabled(Interaction::ID_GARDENDOOR, false);
                     Interaction::SetEnabled(Interaction::ID_GARDENCLOSE, true);
                     if (!wasOpen)
@@ -1144,6 +1172,7 @@ namespace
                 break;
             case Interaction::ID_GARDENCLOSE:
                 Lobby::SetGardenDoorOpen(false);
+                Audio::PlayEffect(DOOR_CLOSE);
                 Interaction::SetEnabled(Interaction::ID_GARDENDOOR, true);
                 Interaction::SetEnabled(Interaction::ID_GARDENCLOSE, false);
                 break;
@@ -1160,6 +1189,7 @@ namespace
                     break;
                 }
                 Garden::SetCellarDoorOpen(true);
+                Audio::PlayEffect(DOOR_OPEN);
                 Interaction::SetEnabled(Interaction::ID_CELLARDOOR, false);
                 Interaction::SetEnabled(Interaction::ID_CELLARCLOSE, true);
                 Interaction::SetEnabled(Interaction::ID_ENTERBASEMENT, true);
@@ -1168,6 +1198,7 @@ namespace
             }
             case Interaction::ID_CELLARCLOSE:
                 Garden::SetCellarDoorOpen(false);
+                Audio::PlayEffect(DOOR_CLOSE);
                 Interaction::SetEnabled(Interaction::ID_CELLARDOOR, true);
                 Interaction::SetEnabled(Interaction::ID_CELLARCLOSE, false);
                 Interaction::SetEnabled(Interaction::ID_ENTERBASEMENT, false);
@@ -1198,6 +1229,7 @@ namespace
                 {
                     Progress::Set(Progress::PANEL_OPEN, true);
                     Basement::SetPanelOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     UI::SetMessage("THE MECHANISM",
                         "Deep in the wall, something heavy disengages.\n"
                         "The stone panel grinds aside - the crest now\n"
@@ -1210,6 +1242,7 @@ namespace
                 {
                     Progress::Set(Progress::PANEL_OPEN, true);
                     Basement::SetPanelOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     UI::SetMessage("THE MECHANISM",
                         "Deep in the wall, something heavy disengages.\n"
                         "The stone panel grinds aside - the crest now\n"
@@ -1222,6 +1255,7 @@ namespace
                 {
                     Progress::Set(Progress::PANEL_OPEN, true);
                     Basement::SetPanelOpen(true);
+                    Audio::PlayEffect(DOOR_OPEN);
                     UI::SetMessage("THE MECHANISM",
                         "Deep in the wall, something heavy disengages.\n"
                         "The stone panel grinds aside - the crest now\n"
@@ -1252,6 +1286,7 @@ namespace
                     {
                         Progress::Set(Progress::CABINET_OPEN, true);
                         SecretRoom::SetCabinetOpen(true);
+                        Audio::PlayEffect(DOOR_OPEN);
                         Interaction::SetEnabled(Interaction::ID_CABINET, false);
                         Interaction::SetEnabled(Interaction::ID_CABKEY, true);
                         UI::SetMessage("THE CABINET",
@@ -1283,7 +1318,11 @@ namespace
                 {
                     if (!Progress::Get(Progress::ESCAPED))
                     {
-                        Lobby::SetFrontOpen(true);
+                        if (!Lobby::IsFrontOpen())
+                        {
+                            Lobby::SetFrontOpen(true);
+                            Audio::PlayEffect(DOOR_OPEN);
+                        }
                         UI::SetMessage("THE FRONT DOOR",
                             "The doors swing outward. The night air carries\n"
                             "rain and roses. The path is open.");
@@ -1400,11 +1439,22 @@ namespace
         UI::SetMode(MODE_PLAYING);
         UI::ClearTexts();
         UI::SetStatusText("Explore the mansion - the house keeps its secrets");
+        Audio::PlayLoop(Audio::MUSIC, MUSIC_LOOP);
         GrabPointer();
     }
 
     void KeyboardDown(unsigned char key, int, int)
     {
+        // Global audio control remains available over menus, clue cards,
+        // keypad overlays, pause, and the ending.
+        if (key == 'm' || key == 'M')
+        {
+            Audio::ToggleMuted();
+            if (UI::IsPlaying())
+                UI::SetStatusText(Audio::IsMuted() ? "Audio muted." : "Audio enabled.");
+            return;
+        }
+
         // the safe keypad swallows all input while it is open
         if (Puzzle::IsOpen())
         {
@@ -1588,6 +1638,7 @@ bool Game::Init(int argc, char **argv)
     glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 
     Lighting_Init();
+    Audio::Init();
     Textures::Init();
     UI::Init();
     UI::SetMode(MODE_MENU);    // boot into the main menu (Phase 11)
@@ -1708,5 +1759,6 @@ bool Game::Run()
     else                 ReleasePointer();
 
     glutMainLoop();
+    Audio::Shutdown();
     return true;
 }

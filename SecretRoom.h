@@ -23,6 +23,7 @@ namespace SecretRoom
     void SetDoorOpen(bool open);
     void UpdateDoor(float dt);
     bool IsDoorOpen();
+    bool IsDoorOpening();               // requested state, even mid-animation
 
     // the crest puzzle: each call rotates one ring 90 deg
     void TurnRing(int which);           // 0 = outer, 1 = middle, 2 = inner

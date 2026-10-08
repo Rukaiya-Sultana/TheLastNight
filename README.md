@@ -43,6 +43,7 @@ g++ -Wall -O2 -DFREEGLUT_STATIC -DFREEGLUT_REPLACE_GLUT -I. ^
 | Mouse | Look around (yaw + pitch, pitch clamped to +/-89 deg) |
 | SHIFT (hold) | Run |
 | F | Toggle flashlight (beam pool + HUD indicator) |
+| M | Mute / unmute audio |
 | E | Interact (doors, letters, objects) |
 | ESC | Pause / resume |
 | F4 | Dev: save a screenshot to `bin/Release/shot.bmp` |
@@ -108,6 +109,7 @@ appears each time the current task is satisfied.
 TheLastNight/
 |-- main.cpp            Program entry point
 |-- Game.h/.cpp         Window, game loop, input, frame timing, pause menu
+|-- Audio.h/.cpp        WinMM/MCI music and sound-effect service
 |-- Player.h/.cpp       First-person player: movement, run, flashlight state
 |-- Camera.h/.cpp       Camera attached to the player (gluLookAt view transform)
 |-- Collision.h/.cpp    Circle-vs-AABB colliders + dynamic door slots
